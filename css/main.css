@@ -21,6 +21,9 @@
 
 html, body { margin: 0; padding: 0; }
 
+/* hidden 属性优先级最高，防止 display:flex 等覆盖导致元素始终可见 */
+[hidden] { display: none !important; }
+
 body {
   background: var(--bg);
   color: var(--text);
