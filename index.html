@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>图库 · Pictures Gallery</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="stylesheet" href="./css/main.css" />
+  </head>
+  <body>
+    <!-- 顶部品牌区 + 统计副标题 -->
+    <header>
+      <div class="brand-row">
+        <span class="brandmark" aria-hidden="true">
+          <svg width="34" height="34" viewBox="0 0 64 64" fill="currentColor">
+            <path d="M13 42 27 25l9 10 5-6 10 13v7H13z" />
+            <circle cx="44" cy="20" r="6" fill="#cf5b2c" />
+          </svg>
+        </span>
+        <div class="brand-text">
+          <h1>图库</h1>
+          <p class="subtitle" id="summary">加载中…</p>
+        </div>
+        <div class="user-area" id="user-area">
+          <!-- 未登录：显示登录按钮；已登录：显示头像+登出 -->
+          <button class="login-btn" id="login-btn" type="button">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub 登录
+          </button>
+          <div class="user-info" id="user-info" hidden>
+            <img id="user-avatar" alt="" />
+            <span id="user-name"></span>
+            <button class="logout-btn" id="logout-btn" type="button">登出</button>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 工具栏：来源筛选 / 目录筛选 / 搜索 / 上传 -->
+    <div class="toolbar">
+      <div class="source-group" role="group" aria-label="来源筛选">
+        <button class="source-btn active" data-source="all" type="button">全部</button>
+        <button class="source-btn" data-source="github" type="button">GitHub</button>
+        <button class="source-btn" data-source="r2" type="button">R2</button>
+      </div>
+
+      <select id="folder-select" aria-label="目录筛选">
+        <option value="all">全部目录</option>
+      </select>
+
+      <input id="search" type="search" placeholder="搜索文件名…" autocomplete="off" />
+
+      <button class="primary-btn" id="upload-btn" type="button" hidden>上传</button>
+    </div>
+
+    <!-- 上传区：默认隐藏，点上传按钮显示 -->
+    <div class="upload-zone" id="upload-zone" hidden>
+      <div class="upload-drop" id="upload-drop">
+        <p>把图片拖到这里，或</p>
+        <label class="file-pick">
+          选择文件
+          <input type="file" id="file-input" multiple accept="image/*" hidden />
+        </label>
+        <ul class="file-list" id="file-list"></ul>
+      </div>
+
+      <div class="upload-options">
+        <div class="target-group">
+          <span class="opt-label">目标：</span>
+          <label><input type="radio" name="target" value="r2" checked /> R2</label>
+          <label><input type="radio" name="target" value="picx" /> Picx (GitHub)</label>
+        </div>
+        <label class="path-input">
+          路径（目录名）：
+          <input type="text" id="upload-path" placeholder="R2 留空=根目录；Picx 默认 assets" />
+        </label>
+        <button class="primary-btn" id="do-upload-btn" type="button">开始上传</button>
+      </div>
+    </div>
+
+    <!-- 瀑布流容器（CSS columns 实现） -->
+    <div class="gallery" id="gallery"></div>
+
+    <!-- 灯箱：点卡片放大 -->
+    <div class="lightbox" id="lightbox" hidden>
+      <button class="lb-close" id="lb-close" type="button" aria-label="关闭">×</button>
+      <figure class="lb-figure">
+        <img id="lb-img" alt="" />
+        <figcaption>
+          <div class="lb-meta" id="lb-meta"></div>
+          <div class="lb-url" id="lb-url"></div>
+          <div class="lb-actions">
+            <button class="lb-btn" id="lb-copy" type="button">复制 URL</button>
+            <button class="lb-btn danger" id="lb-delete" type="button" hidden>删除</button>
+          </div>
+        </figcaption>
+      </figure>
+    </div>
+
+    <!-- toast 提示 -->
+    <div class="toast" id="toast" hidden></div>
+
+    <script type="module" src="./js/app.mjs"></script>
+  </body>
+</html>

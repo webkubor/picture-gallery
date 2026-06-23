@@ -1,0 +1,13 @@
+{
+  "name": "picture-gallery",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "refresh": "node scripts/refresh.mjs",
+    "build": "node scripts/build-static.mjs",
+    "dev": "npx wrangler pages dev . --port 8788",
+    "pages:deploy:manual": "pnpm run refresh && pnpm run build && CLOUDFLARE_ACCOUNT_ID=916ebb1b9f240bf4c8826021dd161692 npx wrangler pages deploy dist --project-name picture-gallery --branch main --commit-dirty=true"
+  },
+  "packageManager": "pnpm@9.0.0"
+}
