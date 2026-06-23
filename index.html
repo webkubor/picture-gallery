@@ -38,17 +38,26 @@
 
     <!-- 工具栏：来源筛选 / 目录筛选 / 搜索 / 上传 -->
     <div class="toolbar">
-      <div class="source-group" role="group" aria-label="来源筛选">
-        <button class="source-btn active" data-source="all" type="button">全部</button>
-        <button class="source-btn" data-source="github" type="button">GitHub</button>
-        <button class="source-btn" data-source="r2" type="button">R2</button>
+      <div class="filter-field">
+        <span class="field-label">来源</span>
+        <div class="source-group" role="group" aria-label="来源筛选">
+          <button class="source-btn active" data-source="all" type="button">全部</button>
+          <button class="source-btn" data-source="github" type="button">GitHub</button>
+          <button class="source-btn" data-source="r2" type="button">R2</button>
+        </div>
       </div>
 
-      <select id="folder-select" aria-label="目录筛选">
-        <option value="all">全部目录</option>
-      </select>
+      <div class="filter-field">
+        <span class="field-label">目录</span>
+        <select id="folder-select" aria-label="目录筛选">
+          <option value="all">全部目录</option>
+        </select>
+      </div>
 
-      <input id="search" type="search" placeholder="搜索文件名…" autocomplete="off" />
+      <div class="filter-field search-field">
+        <span class="field-label">搜索</span>
+        <input id="search" type="search" placeholder="文件名…" autocomplete="off" />
+      </div>
 
       <button class="primary-btn" id="upload-btn" type="button" hidden>上传</button>
     </div>

@@ -125,10 +125,12 @@ function updateSummary(summary) {
     `${summary.total} 张图片 · ${summary.totalSizeMb} MB · GitHub ${gh} · R2 ${r2}`;
 }
 
-function renderFolders(folders) {
+function renderFolders(folders, activeSource = 'all') {
   // 按来源分组（optgroup），value 用 source:folder 复合键，彻底区分同名目录
+  // activeSource 联动：选了具体来源时，只显示该来源的分组
   const bySource = { github: [], r2: [] };
   folders.forEach((f) => {
+    if (activeSource !== 'all' && f.source !== activeSource) return;
     (bySource[f.source] = bySource[f.source] || []).push(f);
   });
 
@@ -136,7 +138,9 @@ function renderFolders(folders) {
   let html = '<option value="all">全部目录</option>';
   for (const src of ['github', 'r2']) {
     if (!bySource[src]?.length) continue;
-    html += `<optgroup label="${label[src]}">`;
+    // 选了具体来源时，optgroup 标题简化（避免和来源按钮重复信息）
+    const title = activeSource === 'all' ? label[src] : '目录';
+    html += `<optgroup label="${title}">`;
     html += bySource[src]
       .map(
         (f) =>
@@ -478,6 +482,10 @@ function bindEvents() {
       els.sourceBtns.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       state.filter.source = btn.dataset.source;
+      // 联动：切来源时重置目录选择，并按新来源重渲染目录下拉
+      state.filter.folder = 'all';
+      renderFolders(state.folders, state.filter.source);
+      els.folderSelect.value = 'all';
       render();
     });
   });
