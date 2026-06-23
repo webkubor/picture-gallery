@@ -3,15 +3,16 @@
 
 import { jsonResponse } from '../_lib/auth.mjs';
 
-export async function onRequestGet({ env, request }) {
+// 固定正式域名（OAuth App 的 callback URL 必须与之一致，不能用动态 origin）
+const APP_ORIGIN = 'https://pictures.webkubor.online';
+
+export async function onRequestGet({ env }) {
   const clientId = env.GH_CLIENT_ID;
   if (!clientId) {
     return jsonResponse({ error: 'GH_CLIENT_ID 未配置' }, 500);
   }
 
-  // 从请求构造回调地址（同源）
-  const url = new URL(request.url);
-  const redirectUri = `${url.origin}/api/callback`;
+  const redirectUri = `${APP_ORIGIN}/api/callback`;
 
   // 随机 state 防 CSRF，写短时 cookie 保存
   const state = bytesToHex(crypto.getRandomValues(new Uint8Array(16)));
@@ -25,7 +26,7 @@ export async function onRequestGet({ env, request }) {
 
   const githubAuthUrl = `https://github.com/login/oauth/authorize?${params}`;
 
-  const res = new Response(null, {
+  return new Response(null, {
     status: 302,
     headers: {
       Location: githubAuthUrl,
@@ -33,7 +34,6 @@ export async function onRequestGet({ env, request }) {
       'Set-Cookie': `pg_oauth_state=${state}; Path=/; HttpOnly; Secure; SameSite=Lax; Max-Age=300`,
     },
   });
-  return res;
 }
 
 function bytesToHex(bytes) {
