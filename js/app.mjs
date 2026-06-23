@@ -126,23 +126,41 @@ function updateSummary(summary) {
 }
 
 function renderFolders(folders) {
-  // 保留首个「全部目录」选项
-  els.folderSelect.innerHTML =
-    '<option value="all">全部目录</option>' +
-    folders
+  // 按来源分组（optgroup），value 用 source:folder 复合键，彻底区分同名目录
+  const bySource = { github: [], r2: [] };
+  folders.forEach((f) => {
+    (bySource[f.source] = bySource[f.source] || []).push(f);
+  });
+
+  const label = { github: 'GitHub 图床', r2: 'R2 对象存储' };
+  let html = '<option value="all">全部目录</option>';
+  for (const src of ['github', 'r2']) {
+    if (!bySource[src]?.length) continue;
+    html += `<optgroup label="${label[src]}">`;
+    html += bySource[src]
       .map(
         (f) =>
-          `<option value="${escapeAttr(f.name)}">${escapeText(f.name)}（${f.count}）</option>`
+          `<option value="${src}:${escapeAttr(f.name)}">${escapeText(f.name)}（${f.count}）</option>`
       )
       .join('');
+    html += '</optgroup>';
+  }
+  els.folderSelect.innerHTML = html;
 }
 
 function applyFilter() {
   const { source, folder, search } = state.filter;
   const q = search.trim().toLowerCase();
+  // folder 可能是 'all' 或 'source:foldername'（复合键）
+  let folderSource = null;
+  let folderName = null;
+  if (folder !== 'all' && folder.includes(':')) {
+    [folderSource, folderName] = folder.split(':');
+  }
   return state.items.filter((it) => {
     if (source !== 'all' && it.source !== source) return false;
-    if (folder !== 'all' && it.folder !== folder) return false;
+    // 目录筛选：若选了复合键，同时匹配 source 和 folder
+    if (folderSource && (it.source !== folderSource || it.folder !== folderName)) return false;
     if (q && !it.name?.toLowerCase().includes(q)) return false;
     return true;
   });

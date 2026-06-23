@@ -52,6 +52,33 @@ header {
   margin-left: auto;
   display: flex;
   align-items: center;
+  gap: 12px;
+}
+
+/* R2 直链导航入口 */
+.nav-link {
+  font-size: 13px;
+  color: var(--text-dim);
+  text-decoration: none;
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  transition: border-color 0.15s, color 0.15s;
+}
+.nav-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* 目录下拉按来源分组：optgroup 标题加粗染色 */
+#folder-select optgroup {
+  font-weight: 600;
+  color: var(--text);
+  font-style: normal;
+}
+#folder-select option {
+  color: var(--text-dim);
+  font-weight: 400;
 }
 .login-btn {
   display: inline-flex;
